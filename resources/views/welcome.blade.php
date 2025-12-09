@@ -33,11 +33,11 @@
       x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
       class="max-w-7xl mx-auto ">
       <div class="mt-4 flex space-x-4 items-center justify-center width-full">
-        <a class="inline-flex items-center px-3 py-2 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-wide bg-white/5 hover:bg-white/10 focus:bg-white/10 active:bg-white/10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        <a class="inline-flex items-center px-3 py-2 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-wide bg-white/5 hover:bg-white/10 focus:bg-white/10 active:bg-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           href="{{ route('login') }}">
           Sign In
         </a>
-        <a class="inline-flex items-center px-3 py-2 border border-transparent rounded-lg font-semibold text-xs text-black uppercase tracking-wide bg-white hover:bg-gray-200 focus:bg-gray-200 active:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        <a class="inline-flex items-center px-3 py-2 border border-transparent rounded-lg font-semibold text-xs text-black uppercase tracking-wide bg-white hover:bg-gray-200 focus:bg-gray-200 active:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           href="{{ route('register') }}">
           Create an Account
         </a>
