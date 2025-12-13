@@ -64,7 +64,8 @@
       <div class="mt-12 ">
         @forelse ($jobs as $job)
           <div class="relative w-full my-6 *:leading-6 border-b border-white/10 pb-2">
-            <a href="" class="text-2xl font-extrabold text-blue-500 hover:text-blue-700">
+            <a href="{{ route('job-vacancies.show', $job->id) }}"
+              class="text-2xl font-extrabold text-blue-500 hover:text-blue-700">
               {{ $job->title }}
               <span class="relative mt-2 text-xs py-0 px-0 text-white/60 font-normal md:hidden">
                 -
