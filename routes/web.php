@@ -11,10 +11,10 @@ Route::get('/', function () {
 });
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:job-seeker'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/job-applications', [JobApplicationController::class, 'index'])->name('job-applications.index');
+    Route::get('/job-applications', [JobApplicationController::class, 'index'])->name('jobApplications.index');
 
     Route::get('/job-vacancies/{id}', [JobVacancyController::class, 'show'])->name('job-vacancies.show');
     Route::get('/job-vacancies/{id}/apply', [JobVacancyController::class, 'apply'])->name('job-vacancies.apply');

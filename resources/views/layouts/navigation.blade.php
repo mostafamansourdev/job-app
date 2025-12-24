@@ -16,7 +16,7 @@
             {{ __('Dashboard') }}
           </x-nav-link>
 
-          <x-nav-link :href="route('job-applications.index')" :active="request()->routeIs('job-applications')" class="text-white">
+          <x-nav-link :href="route('jobApplications.index')" :active="request()->routeIs('job-applications')" class="text-white">
             {{ __('My Applications') }}
           </x-nav-link>
         </div>
@@ -78,7 +78,7 @@
       <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white">
         {{ __('Dashboard') }}
       </x-responsive-nav-link>
-      <x-responsive-nav-link :href="route('job-applications.index')" :active="request()->routeIs('job-applications')" class="text-white">
+      <x-responsive-nav-link :href="route('jobApplications.index')" :active="request()->routeIs('job-applications')" class="text-white">
         {{ __('My Applications') }}
       </x-responsive-nav-link>
     </div>

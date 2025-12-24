@@ -6,11 +6,19 @@ use App\Http\Requests\applyJobRequest;
 use App\Models\JobApplication;
 use App\Models\JobVacancy;
 use App\Models\Resume;
+use App\Services\ResumeAnalysisService;
 use Illuminate\Http\Request;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class JobVacancyController extends Controller
 {
+
+    protected $resumeAnalysisService;
+    public function __construct(ResumeAnalysisService $resumeAnalysisService)
+    {
+        $this->resumeAnalysisService = $resumeAnalysisService;
+    }
+
     public function show($id)
     {
         $jobVacancy = JobVacancy::findOrFail($id);
@@ -26,6 +34,9 @@ class JobVacancyController extends Controller
 
     public function processApplication(applyJobRequest $request, $id)
     {
+
+        $jobVacancy = JobVacancy::findOrFail($id);
+
         // Handle existing resume selection
         $resumeId = null;
         $extractedInfo = null;
@@ -39,17 +50,11 @@ class JobVacancyController extends Controller
             // Store the file in the 'cloud' disk (configured for S3)
             $filePath = $file->storeAs('resumes', $fileName, 'cloud');
 
-            // $fileUrl = config('filesystems.disks.cloud.endpoint') . '/' . config('filesystems.disks.cloud.bucket') . '/' . $filePath;
+            $fileUrl = config('filesystems.disks.cloud.endpoint') . '/' . config('filesystems.disks.cloud.bucket') . '/' . $filePath;
 
-            // ToDo: Extract information using OpenAI API (omitted for brevity)
+            // Extract information using OpenAI API (omitted for brevity)
 
-            $extractedInfo = [
-                'summary' => '',
-                'education' => '',
-                'skills' => '',
-                'experience' => '',
-            ];
-
+            $extractedInfo = $this->resumeAnalysisService->extractResumeInformation($fileUrl);
 
             $resume = Resume::create([
                 'filename' => $originalFileName,
@@ -60,9 +65,10 @@ class JobVacancyController extends Controller
                     'email' => auth()->user()->email,
                 ]),
                 'summary' => $extractedInfo['summary'],
-                'education' => $extractedInfo['education'],
-                'skills' => $extractedInfo['skills'],
-                'experience' => $extractedInfo['experience'],
+                // ensure arrays are stored as JSON strings
+                'education' => is_string($extractedInfo['education']) ? $extractedInfo['education'] : json_encode($extractedInfo['education']),
+                'skills' => is_string($extractedInfo['skills']) ? $extractedInfo['skills'] : json_encode($extractedInfo['skills']),
+                'experience' => is_string($extractedInfo['experience']) ? $extractedInfo['experience'] : json_encode($extractedInfo['experience']),
             ]);
 
             $resumeId = $resume->id;
@@ -73,12 +79,14 @@ class JobVacancyController extends Controller
 
             $extractedInfo = [
                 'summary' => $resume->summary,
-                'education' => $resume->education,
-                'skills' => $resume->skills,
-                'experience' => $resume->experience,
+                'education' => is_string($resume->education) ? json_decode($resume->education, true) : $resume->education,
+                'skills' => is_string($resume->skills) ? json_decode($resume->skills, true) : $resume->skills,
+                'experience' => is_string($resume->experience) ? json_decode($resume->experience, true) : $resume->experience,
             ];
         }
-        // Todo: evaluate job fit using OpenAI API (omitted for brevity)
+        // evaluate job fit using OpenAI API (omitted for brevity)
+
+        $evaluation = $this->resumeAnalysisService->analyzeResume($jobVacancy, $extractedInfo);
 
         // Here you can create a JobApplication record linking the existing resume to the job vacancy
         JobApplication::create([
@@ -86,9 +94,9 @@ class JobVacancyController extends Controller
             "userId" => auth()->id(),
             "resumeId" => $resumeId,
             'jobVacancyId' => $id,
-            "aiGeneratedScore" => 0,
-            "aiGeneratedFeedback" => '',
+            "aiGeneratedScore" => $evaluation['aiGeneratedScore'],
+            "aiGeneratedFeedback" => $evaluation['aiGeneratedFeedback'],
         ]);
-        return redirect()->route('dashboard')->with('success', 'Application submitted successfully using existing resume.');
+        return redirect()->route('jobApplications.index')->with('success', 'Application submitted successfully.');
     }
 }
