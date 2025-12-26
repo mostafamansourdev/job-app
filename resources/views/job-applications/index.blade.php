@@ -65,8 +65,8 @@
 
               <p>
                 Applied With: {{ $jobApplication->resume->filename }}
-                <a href="{{ Storage::disk('cloud')->url($jobApplication->resume->fileUri) }}" target="_blank"
-                  class="mx-2 text-blue-400">
+                <a href="{{ Storage::disk('cloud')->download($jobApplication->resume->fileUri, $jobApplication->resume->filename) }}"
+                  target="_blank" class="mx-2 text-blue-400">
                   View Resume
                 </a>
               </p>

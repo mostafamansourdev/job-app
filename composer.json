@@ -10,8 +10,8 @@
     "license": "MIT",
     "repositories": {
         "job-shared": {
-            "type": "path",
-            "url": "../job-shared"
+            "type": "vcs",
+            "url": "https://github.com/mostafamansourdev/job-shared.git"
         }
     },
     "require": {
@@ -97,6 +97,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

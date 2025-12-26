@@ -7,12 +7,9 @@ use App\Models\JobApplication;
 use App\Models\JobVacancy;
 use App\Models\Resume;
 use App\Services\ResumeAnalysisService;
-use Illuminate\Http\Request;
-use OpenAI\Laravel\Facades\OpenAI;
 
 class JobVacancyController extends Controller
 {
-
     protected $resumeAnalysisService;
     public function __construct(ResumeAnalysisService $resumeAnalysisService)
     {
